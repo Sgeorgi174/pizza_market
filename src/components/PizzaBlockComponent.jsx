@@ -3,38 +3,50 @@ import { useState } from "react";
 export const PizzaBlockComponent = ({
   title = "Название пиццы",
   price = "Цена пиццы",
+  imageUrl = "Иконка пиццы",
+  sizes,
+  types,
 }) => {
-  const [count, setCount] = useState(0);
+  const [activeSize, setActiveSize] = useState(0);
+  const [activeType, setActiveType] = useState(0);
 
-  const onClickAdd = () => {
-    setCount(count + 1);
-  };
+  const typeNames = ["тонкое", "традиционное"];
 
   return (
     <div className="pizza-block">
-      <img
-        className="pizza-block__image"
-        src="https://dodopizza-a.akamaihd.net/static/Img/Products/Pizza/ru-RU/b750f576-4a83-48e6-a283-5a8efb68c35d.jpg"
-        alt="Pizza"
-      />
+      <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
       <h4 className="pizza-block__title">{title}</h4>
       <div className="pizza-block__selector">
         <ul>
-          <li className="active">тонкое</li>
-          <li>традиционное</li>
+          {types.map((type, index) => {
+            return (
+              <li
+                onClick={() => setActiveType(index)}
+                key={index}
+                className={activeType === index ? "active" : ""}
+              >
+                {typeNames[type]}
+              </li>
+            );
+          })}
         </ul>
         <ul>
-          <li className="active">26 см.</li>
-          <li>30 см.</li>
-          <li>40 см.</li>
+          {sizes.map((size, index) => {
+            return (
+              <li
+                onClick={() => setActiveSize(index)}
+                key={index}
+                className={activeSize === index ? "active" : ""}
+              >
+                {size} см.
+              </li>
+            );
+          })}
         </ul>
       </div>
       <div className="pizza-block__bottom">
-        <div className="pizza-block__price">{price}</div>
-        <button
-          onClick={onClickAdd}
-          className="button button--outline button--add"
-        >
+        <div className="pizza-block__price">от {price} ₽</div>
+        <button className="button button--outline button--add">
           <svg
             width="12"
             height="12"
@@ -48,7 +60,7 @@ export const PizzaBlockComponent = ({
             />
           </svg>
           <span>Добавить</span>
-          <i>{count}</i>
+          <i>{0}</i>
         </button>
       </div>
     </div>

@@ -15,6 +15,9 @@
     }
 
     span {
+      display: flex;
+      justify-content: center;
+      min-width: 125px;
       color: $orange;
       border-bottom: 1px dashed $orange;
       cursor: pointer;

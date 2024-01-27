@@ -1,8 +1,21 @@
+import { useState } from "react";
+
 export const SortComponent = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [sortActive, setSortActive] = useState(0);
+
+  const sortList = ["Популярности", "Цене", "Алфавиту"];
+
+  const onClickSort = (index) => {
+    setSortActive(index);
+    setIsVisible(false);
+  };
+
   return (
     <div className="sort">
       <div className="sort__label">
         <svg
+          transform={isVisible ? "rotate(180)" : ""}
           width="10"
           height="6"
           viewBox="0 0 10 6"
@@ -15,15 +28,27 @@ export const SortComponent = () => {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span>популярности</span>
+        <span onClick={() => setIsVisible(!isVisible)}>
+          {sortList[sortActive]}
+        </span>
       </div>
-      <div className="sort__popup">
-        <ul>
-          <li className="active">популярности</li>
-          <li>цене</li>
-          <li>алфавиту</li>
-        </ul>
-      </div>
+      {isVisible && (
+        <div className="sort__popup">
+          <ul>
+            {sortList.map((sortItem, index) => {
+              return (
+                <li
+                  key={index}
+                  onClick={() => onClickSort(index)}
+                  className={sortActive === index ? "active" : ""}
+                >
+                  {sortItem}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
