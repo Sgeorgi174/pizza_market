@@ -1,13 +1,19 @@
 import { useState } from "react";
 
-export const SortComponent = () => {
+export const SortComponent = ({ value, onChangeSort }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [sortActive, setSortActive] = useState(0);
 
-  const sortList = ["Популярности", "Цене", "Алфавиту"];
+  const sortList = [
+    { sortName: "популярности(DESC)", sortProp: "rating" },
+    { sortName: "популярности(ACS)", sortProp: "-rating" },
+    { sortName: "цене(DESC)", sortProp: "price" },
+    { sortName: "цене(ACS)", sortProp: "-price" },
+    { sortName: "алфавиту(DESC)", sortProp: "title" },
+    { sortName: "алфавиту(ACS)", sortProp: "-title" },
+  ];
 
   const onClickSort = (index) => {
-    setSortActive(index);
+    onChangeSort(index);
     setIsVisible(false);
   };
 
@@ -28,9 +34,7 @@ export const SortComponent = () => {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setIsVisible(!isVisible)}>
-          {sortList[sortActive]}
-        </span>
+        <span onClick={() => setIsVisible(!isVisible)}>{value.sortName}</span>
       </div>
       {isVisible && (
         <div className="sort__popup">
@@ -39,10 +43,12 @@ export const SortComponent = () => {
               return (
                 <li
                   key={index}
-                  onClick={() => onClickSort(index)}
-                  className={sortActive === index ? "active" : ""}
+                  onClick={() => onClickSort(sortItem)}
+                  className={
+                    sortItem.sortName === value.sortName ? "active" : ""
+                  }
                 >
-                  {sortItem}
+                  {sortItem.sortName}
                 </li>
               );
             })}
