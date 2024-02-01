@@ -13,6 +13,7 @@ export const SearchBar = () => {
     updateSearchValue(event.target.value);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSearchValue = useCallback(
     debounce((str) => {
       dispatch(setSearchValue(str));
