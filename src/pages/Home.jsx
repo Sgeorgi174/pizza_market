@@ -5,48 +5,50 @@ import { SortComponent } from "../components/SortComponent";
 import { getPizzasList } from "../modules/api";
 import { useEffect, useState } from "react";
 
+import { useSelector, useDispatch } from "react-redux";
+import { setCategoryId, setSortType } from "../redux/slices/filterSlice";
+
 export const Home = () => {
+  const { categoryId, sort } = useSelector((state) => state.filter);
+  const searchValue = useSelector((state) => state.search.value);
+  const dispatch = useDispatch();
+
   const [pizzasList, setPizzasList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [categoryId, setCategoryId] = useState(0);
-  const [sortType, setSortType] = useState({
-    sortName: "популярности",
-    sortProp: "rating",
-  });
 
   useEffect(() => {
     setIsLoading(true);
-    getPizzasList({ categoryId, sortType: sortType.sortProp }).then(
-      (response) => {
-        setPizzasList(response);
-        setIsLoading(false);
-      }
-    );
+    getPizzasList({ categoryId, sort: sort.sortProp }).then((data) => {
+      setPizzasList(data);
+      setIsLoading(false);
+    });
     window.scrollTo(0, 0);
-  }, [categoryId, sortType]);
+  }, [categoryId, sort]);
+
+  const pizzas = pizzasList
+    .filter((obj) =>
+      obj.title.toUpperCase().includes(searchValue.toUpperCase())
+    )
+    .map((pizza) => <PizzaBlockComponent {...pizza} key={pizza.id} />);
+
+  const skeleton = [...new Array(8)].map((_, index) => (
+    <PizzaBlockLoader key={index} />
+  ));
 
   return (
     <div className="container">
       <div className="content__top">
         <CategoriesComponent
           categoryId={categoryId}
-          onClickCategory={(id) => setCategoryId(id)}
+          onClickCategory={(id) => dispatch(setCategoryId(id))}
         />
         <SortComponent
-          value={sortType}
-          onChangeSort={(obj) => setSortType(obj)}
+          value={sort}
+          onChangeSort={(obj) => dispatch(setSortType(obj))}
         />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">
-        {isLoading
-          ? [...new Array(8)].map((_, index) => (
-              <PizzaBlockLoader key={index} />
-            ))
-          : pizzasList.map((pizza) => (
-              <PizzaBlockComponent {...pizza} key={pizza.id} />
-            ))}
-      </div>
+      <div className="content__items">{isLoading ? skeleton : pizzas}</div>
     </div>
   );
 };

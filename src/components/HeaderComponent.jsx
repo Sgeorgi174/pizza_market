@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import logoSvg from "../assets/img/pizza-logo.svg";
+import { SearchBar } from "./SearchBar/SearchBar";
 
 export const HeaderComponent = () => {
   return (
@@ -14,6 +15,7 @@ export const HeaderComponent = () => {
             </div>
           </div>
         </Link>
+        <SearchBar />
         <div className="header__cart">
           <Link to="/cart" className="button button--cart">
             <span>520 ₽</span>
